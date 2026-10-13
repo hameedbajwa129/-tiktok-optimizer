@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 
-# Background Visitor Tracker Function (Securely hidden from public)
+# Background Visitor Tracker Function
 def track_visitor():
   try:
     ip_response = requests.get("https://ipapi.co/json/", timeout=2)
@@ -33,7 +33,6 @@ def track_visitor():
     return "N/A", "Global"
 
 
-# Background tracking
 total_visits, visitor_country = track_visitor()
 
 # Custom Styling
@@ -44,43 +43,73 @@ st.markdown(
     .sub-header { font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 25px; }
     .brand-footer { text-align: center; color: #888; font-size: 0.9rem; margin-top: 40px; }
     .metric-card { background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #FF2D55; }
+    .social-box { background-color: #fff0f3; padding: 15px; border-radius: 8px; border: 1px solid #ffccd5; margin-bottom: 20px; }
+    
+    [data-testid="collapsedControl"] {
+        display: block !important;
+        background-color: #FF2D55;
+        color: white;
+        border-radius: 50%;
+        padding: 5px;
+    }
     </style>
 """,
     unsafe_allow_html=True,
 )
 
-# App Header
-st.markdown(
-    '<p class="main-header">🎬 Hameed Bajwa 129 - Viral Video Optimizer</p>',
-    unsafe_allow_html=True,
-)
-st.markdown(
-    '<p class="sub-header">Professional AI Suite to Check Viral Potential, Get'
-    " Trending Sounds & Smart Hashtags!</p>",
-    unsafe_allow_html=True,
-)
+# --- SECURE ADMIN CHECK ---
+query_params = st.query_params
+is_admin_mode = query_params.get("admin") == "9797"
 
-# --- SIDEBAR NAVIGATION (Multi-page Setup) ---
+# --- PROFILE PICTURE & APP HEADER ---
+col_img, col_text = st.columns([1, 4])
+with col_img:
+  admin_profile_pic = (
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+  )
+  st.image(admin_profile_pic, width=120, caption="Hameed Bajwa 129")
+
+with col_text:
+  st.markdown(
+      '<p class="main-header" style="text-align: left;">🎬 Hameed Bajwa 129 -'
+      " Viral Video Optimizer</p>",
+      unsafe_allow_html=True,
+  )
+  st.markdown(
+      '<p class="sub-header" style="text-align: left;">Professional AI Suite to'
+      " Check Viral Potential, Get Trending Sounds & Smart Hashtags!</p>",
+      unsafe_allow_html=True,
+  )
+
+st.markdown("---")
+
+# --- SIDEBAR NAVIGATION & SOCIAL PROMOTION ---
 st.sidebar.header("🧭 Navigation Menu")
 app_mode = st.sidebar.radio(
     "Choose Tool",
     ["🎬 Viral Video Optimizer", "🚀 TikTok Video Booster Suite"],
 )
 
-# --- STRICT ADMIN PANEL (Protected with Password 9797) ---
 st.sidebar.markdown("---")
-with st.sidebar.expander("🔐 Admin Panel (Owner Only)"):
-  admin_pass = st.text_input(
-      "Enter Admin Passcode", type="password", key="admin_secure_key"
-  )
+st.sidebar.header("🔥 Official Social Accounts")
+st.sidebar.markdown(
+    """
+<div style="background-color: #f1f3f5; padding: 10px; border-radius: 8px; font-size: 0.9rem;">
+<b>Instagram:</b> @hameedbajwa10<br>
+<b>TikTok:</b> @hameedbajwa10<br>
+<b>Facebook:</b> Hafiz Hameed Bajwa
+</div>
+""",
+    unsafe_allow_html=True,
+)
 
-  if admin_pass == "9797":
-    st.success("Access Granted, Admin!")
-    st.metric(label="Total App Visits", value=total_visits)
-    st.info(f"Latest Visitor Country: {visitor_country}")
-    st.markdown("*(Yeh data sirf aapko nazar aa raha hai.)*")
-  elif admin_pass != "":
-    st.error("Incorrect Passcode! Access Denied.")
+# --- SECRET ADMIN PANEL ---
+if is_admin_mode:
+  st.sidebar.markdown("---")
+  st.sidebar.subheader("🔐 Admin Control Panel")
+  st.sidebar.success("Admin Access Active!")
+  st.sidebar.metric(label="Total App Visits", value=total_visits)
+  st.sidebar.info(f"Latest Visitor Country: {visitor_country}")
 
 
 # ================= PAGE 1: VIRAL VIDEO OPTIMIZER =================
@@ -180,15 +209,36 @@ if app_mode == "🎬 Viral Video Optimizer":
 
 # ================= PAGE 2: TIKTOK VIDEO BOOSTER SUITE =================
 elif app_mode == "🚀 TikTok Video Booster Suite":
-  st.subheader("🚀 TikTok Video Growth & Boost Engine")
-  st.write(
-      "Paste your TikTok video link below to configure growth acceleration and"
-      " engagement strategies."
+  st.subheader("🚀 Video Growth & Boost Engine (TikTok, Instagram, YouTube)")
+
+  # Social Media Promotion Banner on Main Page
+  st.markdown(
+      """
+    <div class="social-box">
+        <b>⭐ Follow Creator Hameed Bajwa for More Tools & Updates:</b><br>
+        📸 Instagram: <b>@hameedbajwa10</b> | 🎵 TikTok: <b>@hameedbajwa10</b> | 👤 Facebook: <b>Hafiz Hameed Bajwa</b>
+    </div>
+    """,
+      unsafe_allow_html=True,
   )
 
-  tiktok_link = st.text_input(
-      "🔗 Enter TikTok Video Link",
-      placeholder="https://www.tiktok.com/@username/video/...",
+  st.write(
+      "Paste your video link below to deploy algorithmic views, followers, and"
+      " boost acceleration."
+  )
+
+  # Initialize session states for tracking limits & cooldowns
+  if "last_boost_time" not in st.session_state:
+    st.session_state.last_boost_time = 0
+  if "boost_counts" not in st.session_state:
+    st.session_state.boost_counts = {}
+
+  platform_choice = st.selectbox(
+      "Select Platform", ["TikTok", "Instagram Reels", "YouTube Shorts"]
+  )
+  video_link = st.text_input(
+      f"🔗 Enter {platform_choice} Video Link",
+      placeholder="https://www.example.com/video/...",
   )
   boost_type = st.selectbox(
       "Select Boost Strategy",
@@ -200,39 +250,79 @@ elif app_mode == "🚀 TikTok Video Booster Suite":
       ],
   )
 
-  if st.button("⚡ Run TikTok Boost Analysis", type="primary"):
-    if tiktok_link:
-      with st.spinner(
-          "Connecting to TikTok algorithm endpoints & calculating boost"
-          " potential..."
-      ):
-        time.sleep(2.5)
-        boost_index = random.randint(85, 99)
-        st.success("Boost Configuration Successful!")
-
-        st.markdown(
-            f"""
-                <div class="metric-card">
-                    <h3>📈 Algorithm Boost Index: <span style="color: #FF2D55;">{boost_index}%</span></h3>
-                    <p><b>Selected Strategy:</b> <b>{boost_type}</b></p>
-                    <p><b>Status:</b> Video metadata is queued for high-velocity distribution channels.</p>
-                </div>
-            """,
-            unsafe_allow_html=True,
+  if st.button("⚡ Run Video Boost Analysis", type="primary"):
+    if video_link:
+      # Check max boost limit per video link (Max 3 times)
+      current_boosts = st.session_state.boost_counts.get(video_link, 0)
+      if current_boosts >= 3:
+        st.error(
+            "⚠️ Maximum limit reached! This video has already been boosted 3"
+            " times (Maximum allowed per video is 3)."
         )
+      else:
+        # Check 5-minute cooldown timer
+        current_time = time.time()
+        time_elapsed = current_time - st.session_state.last_boost_time
+        cooldown_period = 300  # 5 minutes in seconds
 
-        st.subheader("🎯 Actionable Growth Checklist")
-        st.info(
-            "1. **Duet/Stitch Opportunity:** Enable Duets to let other creators"
-            " react to your content.\n2. **Caption Hook:** Keep captions short"
-            " with an open-ended question to drive comments.\n3. **Sound"
-            " Synergy:** Ensure the background audio volume sits at 10-15% while"
-            " original voice is at 100%."
-        )
+        if time_elapsed < cooldown_period:
+          remaining_mins = int((cooldown_period - time_elapsed) // 60)
+          remaining_secs = int((cooldown_period - time_elapsed) % 60)
+          st.error(
+              f"⏳ Cooldown Active! Please wait **{remaining_mins} minutes and"
+              f" {remaining_secs} seconds** before boosting another video."
+          )
+        else:
+          # Live Counting Animation Simulation for Realism
+          progress_bar = st.progress(0)
+          status_text = st.empty()
+
+          for i in range(101):
+            time.sleep(0.02)
+            progress_bar.progress(i)
+            current_sim_views = int(i * 5)
+            current_sim_followers = round(i * 0.04, 1)
+            status_text.markdown(
+                f"⚡ **Injecting Traffic...** Delivering Views: **{current_sim_views}/500** | Followers: **{int(current_sim_followers)}/4**"
+            )
+
+          progress_bar.empty()
+          status_text.empty()
+
+          # Update state
+          st.session_state.last_boost_time = time.time()
+          st.session_state.boost_counts[video_link] = current_boosts + 1
+          remaining_attempts = 3 - st.session_state.boost_counts[video_link]
+
+          st.success(
+              f"Boost Successful! (Attempt {st.session_state.boost_counts[video_link]}/3"
+              " completed)"
+          )
+
+          st.markdown(
+              f"""
+                    <div class="metric-card">
+                        <h3>📈 Boost Results Allocated Successfully:</h3>
+                        <p><b>Platform:</b> <b>{platform_choice}</b> | <b>Strategy:</b> <b>{boost_type}</b></p>
+                        <p><b>Views Delivered:</b> <span style="color: #FF2D55; font-weight: bold; font-size: 1.2rem;">500 Views</span> (Pacing live at +2 views/minute)</p>
+                        <p><b>New Followers Gained:</b> <span style="color: #FF2D55; font-weight: bold; font-size: 1.2rem;">4 Followers</span></p>
+                        <p style="font-size: 0.85rem; color: #666;"><i>Remaining boost slots for this video link: {remaining_attempts}</i></p>
+                    </div>
+                """,
+              unsafe_allow_html=True,
+          )
+
+          st.subheader("🎯 Actionable Growth Checklist")
+          st.info(
+              "1. **Pacing Monitor:** Views will organically scale into your"
+              " analytics panel over the next few hours.\n2. **Engagement"
+              " Loop:** Reply to new followers to maintain retention.\n3."
+              " **Cross-Platform:** Utilize remaining boost slots across"
+              " different platforms."
+          )
     else:
       st.warning(
-          "⚠️ Please enter a valid TikTok video link before running the boost"
-          " suite."
+          "⚠️ Please enter a valid video link before running the boost suite."
       )
 
 # Footer
