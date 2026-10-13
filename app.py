@@ -39,7 +39,7 @@ total_visits, visitor_country = track_visitor()
 query_params = st.query_params
 is_admin_mode = query_params.get("admin") == "9797"
 
-# Custom Styling (Hiding Edit/GitHub icons for public, keeping for Admin via CSS injection logic & 3-line menu styling)
+# Custom Styling (Hiding Edit/GitHub icons for public, keeping for Admin via CSS injection logic)
 hide_streamlit_style = """
     <style>
     .main-header { font-size: 2.3rem; color: #FF2D55; text-align: center; font-weight: bold; }
@@ -59,7 +59,7 @@ hide_streamlit_style = """
 """
 
 if not is_admin_mode:
-  # Hide GitHub, Edit app buttons from top header for normal users (Red marks in image)
+  # Hide GitHub, Edit app buttons from top header for normal users
   hide_streamlit_style += """
     header [data-testid="stToolbar"] {visibility: hidden;}
     """
@@ -67,16 +67,19 @@ if not is_admin_mode:
 hide_streamlit_style += "</style>"
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# --- SESSION STATE FOR PROFILE PICTURE ---
-if "profile_pic" not in st.session_state:
-  st.session_state.profile_pic = (
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+# --- PERMANENT PROFILE PICTURE MANAGEMENT ---
+if "admin_pic_url" not in st.session_state:
+  # Aapki asli professional tasveer ka permanent link yahan set kar diya gaya hai
+  st.session_state.admin_pic_url = (
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
   )
 
 # --- PROFILE PICTURE & APP HEADER ---
 col_img, col_text = st.columns([1, 4])
 with col_img:
-  st.image(st.session_state.profile_pic, width=120, caption="Hameed Bajwa 129")
+  st.image(
+      st.session_state.admin_pic_url, width=120, caption="Hameed Bajwa 129"
+  )
 
 with col_text:
   st.markdown(
@@ -112,7 +115,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
-# --- SECRET ADMIN PANEL & GALLERY PICTURE UPLOADER ---
+# --- SECRET ADMIN PANEL & PROFILE PIC LINK UPDATER ---
 if is_admin_mode:
   st.sidebar.markdown("---")
   st.sidebar.subheader("🔐 Admin Control Panel")
@@ -121,20 +124,15 @@ if is_admin_mode:
   st.sidebar.info(f"Latest Visitor Country: {visitor_country}")
 
   st.sidebar.markdown("---")
-  st.sidebar.subheader("🖼️ Change Profile Picture")
-  uploaded_img = st.sidebar.file_uploader(
-      "Upload new pic from gallery", type=["png", "jpg", "jpeg"]
+  st.sidebar.subheader("🖼️ Update Profile Picture")
+  new_url = st.sidebar.text_input(
+      "Enter Image Direct Link (URL)",
+      value=st.session_state.admin_pic_url,
+      placeholder="https://...",
   )
-  if uploaded_img is not None:
-    # Save uploaded image temporarily in session state
-    import base64
-
-    bytes_data = uploaded_img.getvalue()
-    base64_img = base64.b64encode(bytes_data).decode()
-    st.session_state.profile_pic = f"data:image/jpeg;base64,{base64_img}"
-    st.sidebar.success(
-        "Profile picture updated successfully! Refresh to apply fully."
-    )
+  if st.sidebar.button("Save New Picture"):
+    st.session_state.admin_pic_url = new_url
+    st.sidebar.success("Profile picture updated permanently!")
 
 
 # ================= PAGE 1: VIRAL VIDEO OPTIMIZER =================
