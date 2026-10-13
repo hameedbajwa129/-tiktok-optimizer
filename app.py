@@ -73,7 +73,8 @@ if uploaded_file is not None:
                 # Suggested Sounds
                 st.subheader("🎵 Recommended Viral Sounds")
                 if category == "Fashion & Style":
-                    st.success("1. Aesthetic Slow Mo Beat (Trending)
+                    st.success("1. Aesthetic Slow Mo Beat (Trending)")
+2. Traditional Fusion Remix v2
 2. Traditional Fusion Remix v2
 3. High Fashion Runway Loop")
                 elif category == "Entertainment / Comedy":
