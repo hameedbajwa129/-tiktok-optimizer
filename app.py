@@ -35,9 +35,12 @@ def track_visitor():
 
 total_visits, visitor_country = track_visitor()
 
-# Custom Styling
-st.markdown(
-    """
+# --- SECURE ADMIN CHECK ---
+query_params = st.query_params
+is_admin_mode = query_params.get("admin") == "9797"
+
+# Custom Styling (Hiding Edit/GitHub icons for public, keeping for Admin via CSS injection logic & 3-line menu styling)
+hide_streamlit_style = """
     <style>
     .main-header { font-size: 2.3rem; color: #FF2D55; text-align: center; font-weight: bold; }
     .sub-header { font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 25px; }
@@ -45,29 +48,35 @@ st.markdown(
     .metric-card { background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #FF2D55; }
     .social-box { background-color: #fff0f3; padding: 15px; border-radius: 8px; border: 1px solid #ffccd5; margin-bottom: 20px; }
     
+    /* 3-Line Menu Button styling for mobile & desktop */
     [data-testid="collapsedControl"] {
         display: block !important;
         background-color: #FF2D55;
         color: white;
         border-radius: 50%;
-        padding: 5px;
+        padding: 6px;
     }
-    </style>
-""",
-    unsafe_allow_html=True,
-)
+"""
 
-# --- SECURE ADMIN CHECK ---
-query_params = st.query_params
-is_admin_mode = query_params.get("admin") == "9797"
+if not is_admin_mode:
+  # Hide GitHub, Edit app buttons from top header for normal users (Red marks in image)
+  hide_streamlit_style += """
+    header [data-testid="stToolbar"] {visibility: hidden;}
+    """
+
+hide_streamlit_style += "</style>"
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+# --- SESSION STATE FOR PROFILE PICTURE ---
+if "profile_pic" not in st.session_state:
+  st.session_state.profile_pic = (
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
+  )
 
 # --- PROFILE PICTURE & APP HEADER ---
 col_img, col_text = st.columns([1, 4])
 with col_img:
-  admin_profile_pic = (
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150"
-  )
-  st.image(admin_profile_pic, width=120, caption="Hameed Bajwa 129")
+  st.image(st.session_state.profile_pic, width=120, caption="Hameed Bajwa 129")
 
 with col_text:
   st.markdown(
@@ -103,13 +112,29 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
-# --- SECRET ADMIN PANEL ---
+# --- SECRET ADMIN PANEL & GALLERY PICTURE UPLOADER ---
 if is_admin_mode:
   st.sidebar.markdown("---")
   st.sidebar.subheader("🔐 Admin Control Panel")
   st.sidebar.success("Admin Access Active!")
   st.sidebar.metric(label="Total App Visits", value=total_visits)
   st.sidebar.info(f"Latest Visitor Country: {visitor_country}")
+
+  st.sidebar.markdown("---")
+  st.sidebar.subheader("🖼️ Change Profile Picture")
+  uploaded_img = st.sidebar.file_uploader(
+      "Upload new pic from gallery", type=["png", "jpg", "jpeg"]
+  )
+  if uploaded_img is not None:
+    # Save uploaded image temporarily in session state
+    import base64
+
+    bytes_data = uploaded_img.getvalue()
+    base64_img = base64.b64encode(bytes_data).decode()
+    st.session_state.profile_pic = f"data:image/jpeg;base64,{base64_img}"
+    st.sidebar.success(
+        "Profile picture updated successfully! Refresh to apply fully."
+    )
 
 
 # ================= PAGE 1: VIRAL VIDEO OPTIMIZER =================
