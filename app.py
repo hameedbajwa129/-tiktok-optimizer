@@ -73,18 +73,11 @@ if uploaded_file is not None:
                 # Suggested Sounds
                 st.subheader("🎵 Recommended Viral Sounds")
                 if category == "Fashion & Style":
-                    st.success("1. Aesthetic Slow Mo Beat (Trending)")
-2. Traditional Fusion Remix v2
-2. Traditional Fusion Remix v2
-3. High Fashion Runway Loop")
+                    st.success("1. Aesthetic Slow Mo Beat (Trending)\n2. Traditional Fusion Remix v2\n3. High Fashion Runway Loop")
                 elif category == "Entertainment / Comedy":
-                    st.success("1. Viral Comedy Punchline Beat #1
-2. Funny Sound Effect Pack Pro
-3. Trending Meme Audio #4")
+                    st.success("1. Viral Comedy Punchline Beat #1\n2. Funny Sound Effect Pack Pro\n3. Trending Meme Audio #4")
                 else:
-                    st.success("1. Global TikTok Viral Trending Sound
-2. Upbeat Chill Electronic Rhythm
-3. Cinematic Energy Build-up")
+                    st.success("1. Global TikTok Viral Trending Sound\n2. Upbeat Chill Electronic Rhythm\n3. Cinematic Energy Build-up")
                 
                 # Hashtags Generation
                 st.subheader("🏷️ Optimized Viral Hashtags")
@@ -97,9 +90,7 @@ if uploaded_file is not None:
                 
                 # Professional Recommendations
                 st.subheader("💡 Pro Growth Strategies")
-                st.info("• **Strong Hook:** Ensure the first 3 seconds grab immediate user attention.
-• **Engagement:** Pin a creative comment and reply within 30 minutes.
-• **Timing:** Post during peak regional hours (6 PM - 9 PM).")
+                st.info("• **Strong Hook:** Ensure the first 3 seconds grab immediate user attention.\n• **Engagement:** Pin a creative comment and reply within 30 minutes.\n• **Timing:** Post during peak regional hours (6 PM - 9 PM).")
 else:
     st.info("👈 Please upload a video file using the uploader above to run the Hameed Bajwa 129 optimization suite.")
 
