@@ -67,33 +67,16 @@ if not is_admin_mode:
 hide_streamlit_style += "</style>"
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# --- PERMANENT PROFILE PICTURE & APP HEADER ---
-col_img, col_text = st.columns([1, 4])
-
-with col_img:
-  # Permanent professional profile image for everyone
-  profile_pic_url = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
-  st.image(profile_pic_url, width=120, caption="Hameed Bajwa 129")
-
-  # Agar sirf admin ho toh tasveer ke neeche change karne ka option ho
-  if is_admin_mode:
-    new_admin_img = st.file_uploader(
-        "Admin: Change Pic", type=["png", "jpg", "jpeg"], key="admin_pic_upload"
-    )
-    if new_admin_img is not None:
-      st.success("Admin picture updated successfully in current session!")
-
-with col_text:
-  st.markdown(
-      '<p class="main-header" style="text-align: left;">🎬 Hameed Bajwa 129 -'
-      " Viral Video Optimizer</p>",
-      unsafe_allow_html=True,
-  )
-  st.markdown(
-      '<p class="sub-header" style="text-align: left;">Professional AI Suite to'
-      " Check Viral Potential, Get Trending Sounds & Smart Hashtags!</p>",
-      unsafe_allow_html=True,
-  )
+# --- APP HEADER (WITHOUT PICTURE) ---
+st.markdown(
+    '<p class="main-header">🎬 Hameed Bajwa 129 - Viral Video Optimizer</p>',
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<p class="sub-header">Professional AI Suite to Check Viral Potential, Get'
+    " Trending Sounds & Smart Hashtags!</p>",
+    unsafe_allow_html=True,
+)
 
 st.markdown("---")
 
