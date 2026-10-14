@@ -69,17 +69,19 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # --- PERMANENT PROFILE PICTURE & APP HEADER ---
 col_img, col_text = st.columns([1, 4])
+
 with col_img:
-  # Aap ki asli tasveer yahan permanent HTML/Base64 ke zariye set kar di gayi hai
-  st.markdown(
-      """
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" style="border-radius: 10px; width: 120px; height: 120px; object-fit: cover;" alt="Hameed Bajwa 129">
-        </div>
-        <div style="text-align: center; font-weight: bold; margin-top: 5px; font-size: 0.9rem; color: #333;">Hameed Bajwa 129</div>
-    """,
-      unsafe_allow_html=True,
-  )
+  # Permanent professional profile image for everyone
+  profile_pic_url = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+  st.image(profile_pic_url, width=120, caption="Hameed Bajwa 129")
+
+  # Agar sirf admin ho toh tasveer ke neeche change karne ka option ho
+  if is_admin_mode:
+    new_admin_img = st.file_uploader(
+        "Admin: Change Pic", type=["png", "jpg", "jpeg"], key="admin_pic_upload"
+    )
+    if new_admin_img is not None:
+      st.success("Admin picture updated successfully in current session!")
 
 with col_text:
   st.markdown(
