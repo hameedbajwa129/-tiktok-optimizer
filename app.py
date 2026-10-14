@@ -39,7 +39,7 @@ total_visits, visitor_country = track_visitor()
 query_params = st.query_params
 is_admin_mode = query_params.get("admin") == "9797"
 
-# Custom Styling (Hiding Edit/GitHub icons for public, keeping for Admin via CSS injection logic)
+# Custom Styling (Hiding Edit/GitHub icons for public, keeping 3-line menu button visible)
 hide_streamlit_style = """
     <style>
     .main-header { font-size: 2.3rem; color: #FF2D55; text-align: center; font-weight: bold; }
@@ -48,13 +48,14 @@ hide_streamlit_style = """
     .metric-card { background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #FF2D55; }
     .social-box { background-color: #fff0f3; padding: 15px; border-radius: 8px; border: 1px solid #ffccd5; margin-bottom: 20px; }
     
-    /* 3-Line Menu Button styling for mobile & desktop */
+    /* Force 3-Line / Arrow Menu Button to Always Show */
     [data-testid="collapsedControl"] {
         display: block !important;
         background-color: #FF2D55;
         color: white;
         border-radius: 50%;
         padding: 6px;
+        z-index: 999999;
     }
 """
 
