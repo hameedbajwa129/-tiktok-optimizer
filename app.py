@@ -39,7 +39,7 @@ total_visits, visitor_country = track_visitor()
 query_params = st.query_params
 is_admin_mode = query_params.get("admin") == "9797"
 
-# Custom Styling (Hiding Edit/GitHub icons for public, keeping 3-line menu button visible)
+# Clean Styling
 hide_streamlit_style = """
     <style>
     .main-header { font-size: 2.3rem; color: #FF2D55; text-align: center; font-weight: bold; }
@@ -47,28 +47,19 @@ hide_streamlit_style = """
     .brand-footer { text-align: center; color: #888; font-size: 0.9rem; margin-top: 40px; }
     .metric-card { background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #FF2D55; }
     .social-box { background-color: #fff0f3; padding: 15px; border-radius: 8px; border: 1px solid #ffccd5; margin-bottom: 20px; }
-    
-    /* Force 3-Line / Arrow Menu Button to Always Show */
-    [data-testid="collapsedControl"] {
-        display: block !important;
-        background-color: #FF2D55;
-        color: white;
-        border-radius: 50%;
-        padding: 6px;
-        z-index: 999999;
-    }
 """
 
 if not is_admin_mode:
-  # Hide GitHub, Edit app buttons from top header for normal users
+  # Normal users ke liye sirf GitHub aur Edit icons ko hide kiya hai, menu button ko nahi
   hide_streamlit_style += """
-    header [data-testid="stToolbar"] {visibility: hidden;}
+    header tr, header a[href*="github.com"] { display: none !important; }
+    .stApp > header { background-color: transparent; }
     """
 
 hide_streamlit_style += "</style>"
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# --- APP HEADER (WITHOUT PICTURE) ---
+# --- APP HEADER ---
 st.markdown(
     '<p class="main-header">🎬 Hameed Bajwa 129 - Viral Video Optimizer</p>',
     unsafe_allow_html=True,
